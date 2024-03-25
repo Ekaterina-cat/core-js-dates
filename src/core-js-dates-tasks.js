@@ -234,11 +234,7 @@ function getCountWeekendsInMonth(month, year) {
  */
 function getWeekNumberByDate(date) {
   const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-  const firstMondayOfYear = firstDayOfYear;
-  if (firstMondayOfYear.getDay() !== 1) {
-    firstMondayOfYear.setDate(firstDayOfYear.getDate());
-  }
-  const diffInTime = date.getTime() - firstMondayOfYear.getTime();
+  const diffInTime = date.getTime() - firstDayOfYear.getTime();
   const diffInDays = diffInTime / (1000 * 60 * 60 * 24);
   let weekNumber = Math.ceil(diffInDays / 7);
   if (firstDayOfYear.getDay() === 2 || firstDayOfYear.getDay() === 4) {
