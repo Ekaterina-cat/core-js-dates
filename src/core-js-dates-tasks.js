@@ -17,8 +17,9 @@
  * '01 Jan 1970 00:00:00 UTC' => 0
  * '04 Dec 1995 00:12:00 UTC' => 818035920000
  */
-function dateToTimestamp(/* date */) {
-  throw new Error('Not implemented');
+function dateToTimestamp(date) {
+  const parsedDate = new Date(date);
+  return parsedDate.getTime();
 }
 
 /**
@@ -31,8 +32,14 @@ function dateToTimestamp(/* date */) {
  * Date(2023, 5, 1, 8, 20, 55) => '08:20:55'
  * Date(2015, 10, 20, 23, 15, 1) => '23:15:01'
  */
-function getTime(/* date */) {
-  throw new Error('Not implemented');
+function getTime(date) {
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+  const hoursFormat = String(hours).padStart(2, '0');
+  const minutesFormat = String(minutes).padStart(2, '0');
+  const secondsFormat = String(seconds).padStart(2, '0');
+  return `${hoursFormat}:${minutesFormat}:${secondsFormat}`;
 }
 
 /**
@@ -46,8 +53,19 @@ function getTime(/* date */) {
  * '03 Dec 1995 00:12:00 UTC' => 'Sunday'
  * '2024-01-30T00:00:00.000Z' => 'Tuesday'
  */
-function getDayName(/* date */) {
-  throw new Error('Not implemented');
+function getDayName(date) {
+  const newDate = new Date(date);
+  const daysWeek = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+  const dayNumber = newDate.getDay();
+  return daysWeek[dayNumber];
 }
 
 /**
@@ -160,8 +178,19 @@ function getCountWeekendsInMonth(/* month, year */) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(/* date */) {
-  throw new Error('Not implemented');
+function getWeekNumberByDate(date) {
+  const dateInMilliseconds = new Date(date.valueOf());
+  const dayWeek = (dateInMilliseconds.getDay() + 6) % 7;
+  dateInMilliseconds.setDate(dateInMilliseconds.getDate() - dayWeek + 3);
+  const firstThursday = dateInMilliseconds.valueOf();
+  dateInMilliseconds.setMonth(0, 1);
+  if (dateInMilliseconds.getDay() !== 4) {
+    dateInMilliseconds.setMonth(
+      0,
+      1 + ((4 - dateInMilliseconds.getDay() + 7) % 7)
+    );
+  }
+  return 1 + Math.ceil((firstThursday - dateInMilliseconds) / 604800000);
 }
 
 /**
