@@ -278,8 +278,18 @@ function getNextFridayThe13th(date) {
  * Date(2024, 5, 1) => 2
  * Date(2024, 10, 10) => 4
  */
-function getQuarter(/* date */) {
-  throw new Error('Not implemented');
+function getQuarter(date) {
+  const mounth = date.getUTCMonth();
+  if (mounth >= 4 && mounth <= 6) {
+    return 2;
+  }
+  if (mounth >= 7 && mounth <= 9) {
+    return 3;
+  }
+  if (mounth >= 10 && mounth <= 12) {
+    return 4;
+  }
+  return 1;
 }
 
 /**
@@ -300,8 +310,35 @@ function getQuarter(/* date */) {
  * { start: '01-01-2024', end: '15-01-2024' }, 1, 3 => ['01-01-2024', '05-01-2024', '09-01-2024', '13-01-2024']
  * { start: '01-01-2024', end: '10-01-2024' }, 1, 1 => ['01-01-2024', '03-01-2024', '05-01-2024', '07-01-2024', '09-01-2024']
  */
-function getWorkSchedule(/* period, countWorkDays, countOffDays */) {
-  throw new Error('Not implemented');
+function getWorkSchedule(period, countWorkDays, countOffDays) {
+  const firstDate = new Date(period.start.split('-').reverse().join('-'));
+  const lastDate = new Date(period.end.split('-').reverse().join('-'));
+  const workSchedule = [];
+  let workDayCounter = 0;
+  let weekendCounter = 0;
+  for (
+    let date = new Date(firstDate);
+    date <= lastDate;
+    date.setDate(date.getDate() + 1)
+  ) {
+    const workDay = date
+      .toISOString()
+      .split('T')[0]
+      .split('-')
+      .reverse()
+      .join('-');
+    if (workDayCounter < countWorkDays) {
+      workSchedule.push(workDay);
+      workDayCounter += 1;
+    } else if (weekendCounter < countOffDays) {
+      weekendCounter += 1;
+    } else {
+      workDayCounter = 1;
+      weekendCounter = 0;
+      workSchedule.push(workDay);
+    }
+  }
+  return workSchedule;
 }
 
 /**
@@ -316,8 +353,17 @@ function getWorkSchedule(/* period, countWorkDays, countOffDays */) {
  * Date(2022, 2, 1) => false
  * Date(2020, 2, 1) => true
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  const lastDayMonth = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    new Date(date.getFullYear(), date.getMonth(), 0).getDate()
+  );
+  const day = lastDayMonth.getDate();
+  if (day === 29) {
+    return true;
+  }
+  return false;
 }
 
 module.exports = {
