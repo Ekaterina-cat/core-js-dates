@@ -173,8 +173,26 @@ function isDateInPeriod(date, period) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  const newDate = new Date(date);
+  const month = newDate.getMonth() + 1;
+  const day = newDate.getUTCDate();
+  const year = newDate.getFullYear();
+  let hours = newDate.getUTCHours();
+  const minutes = newDate.getMinutes();
+  const seconds = newDate.getSeconds();
+  let ampm;
+  if (hours >= 12) {
+    ampm = 'PM';
+  } else {
+    ampm = 'AM';
+  }
+  if (hours > 12) {
+    hours -= 12;
+  } else if (hours === 0) {
+    hours = 12;
+  }
+  return `${month}/${day}/${year}, ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${ampm}`;
 }
 
 /**
@@ -189,8 +207,16 @@ function formatDate(/* date */) {
  * 12, 2023 => 10
  * 1, 2024 => 8
  */
-function getCountWeekendsInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountWeekendsInMonth(month, year) {
+  const daysMonth = new Date(year, month, 0).getDate();
+  let weekends = 0;
+  for (let i = 1; i <= daysMonth; i += 1) {
+    const date = new Date(year, month - 1, i);
+    if (date.getDay() === 0 || date.getDay() === 6) {
+      weekends += 1;
+    }
+  }
+  return weekends;
 }
 
 /**
@@ -232,8 +258,13 @@ function getWeekNumberByDate(date) {
  * Date(2024, 0, 13) => Date(2024, 8, 13)
  * Date(2023, 1, 1) => Date(2023, 9, 13)
  */
-function getNextFridayThe13th(/* date */) {
-  throw new Error('Not implemented');
+function getNextFridayThe13th(date) {
+  const nowDate = new Date(date.getTime());
+  if (nowDate.getDay() === 5 && nowDate.getDate() === 13) {
+    return new Date(nowDate.getTime());
+  }
+  nowDate.setDate(nowDate.getDate() + 1);
+  return getNextFridayThe13th(nowDate);
 }
 
 /**
